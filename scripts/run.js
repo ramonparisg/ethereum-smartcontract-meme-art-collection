@@ -2,26 +2,29 @@ const hre = require("hardhat");
 
 const main = async () => {
     const [owner, randomPerson] = await hre.ethers.getSigners();
-    const waveContractFactory = await hre.ethers.getContractFactory("WavePortal");
-    const waveContract = await waveContractFactory.deploy();
-    await waveContract.deployed();
+    const contractFactory = await hre.ethers.getContractFactory("MemeArtCollectionPortal");
+    const contract = await contractFactory.deploy();
+    await contract.deployed();
     console.log(
         "Fuck yeaaaaaah. Contract deployed to:%s by %s",
-        waveContract.address,
+        contract.address,
         owner.address
     );
 
-    await waveContract.getTotalWaves();
+    await contract.getTotalPosts();
 
-    let waveTxn = await waveContract.wave();
-    await waveTxn.wait();
+    const post = {imgUrl: "url", title: "title", description: new Date().toISOString()};
+    let txn = await contract.publishPost(post);
+    await txn.wait();
 
-    await waveContract.getTotalWaves();
 
-    console.log("Random person waving")
-    let randomPersonTxn = await waveContract.connect(randomPerson).wave();
-    await randomPersonTxn.wait();
-    await waveContract.getTotalWaves();
+    console.log("Calling contract from random person")
+    const txdFromRandomPerson = await contract.connect(randomPerson).publishPost(post);
+    await txdFromRandomPerson.wait();
+
+    const totalPosts = await contract.getTotalPosts();
+    console.log("total posts", totalPosts)
+
 
 };
 
