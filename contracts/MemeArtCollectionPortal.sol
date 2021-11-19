@@ -4,35 +4,19 @@ import "hardhat/console.sol";
 
 contract MemeArtCollectionPortal {
 
-    Post[] posts;
-
-
-    struct Meme {
-        string imgUrl;
-        string title;
-        string description;
-    }
-
-    struct Post {
-        Meme meme;
-        address author;
-    }
-
+    string[] memes;
 
     constructor() {
         console.log("Yo yo, I am a contract am I am smart");
     }
 
-    function publishPost( Meme memory meme) public {
-        Post memory post;
-        post.meme = meme;
-        post.author = msg.sender;
-        posts.push(post);
-        console.log("%s has saved a post!", msg.sender);
+    function uploadMeme(string memory meme) public {
+        memes.push(meme);
+        console.log("%s has saved a meme!", msg.sender);
     }
 
-    function getTotalPosts() public view returns (Post[] memory) {
-        console.log("We have %d total posts!", posts.length);
-        return posts;
+    function getTotalMemes() public view returns (string[] memory) {
+        console.log("We have %d total memes!", memes.length);
+        return memes;
     }
 }

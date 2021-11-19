@@ -1,3 +1,3 @@
-Deployed in Rinkeby testnet by this address: 0xD6e20be5E92f230b0220e40734c27AB13Ca5304e
+Deployed in Rinkeby testnet by this address: 0xAa9e376eeB802f2804cfd7B4190a063D1fa7a6F0
 
 Used Alchemy for deploying easily
