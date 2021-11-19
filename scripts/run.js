@@ -1,5 +1,17 @@
 const hre = require("hardhat");
 
+function mapPosts(totalPosts) {
+  return totalPosts?.map(({ meme, ...post }) => ({
+    author: post.author,
+    timestamp: new Date(post.timestamp * 1000),
+    meme: {
+      imgUrl: meme.imgUrl,
+      title: meme.title,
+      description: meme.description,
+    },
+  }));
+}
+
 const main = async () => {
   const [owner, randomPerson] = await hre.ethers.getSigners();
   const contractFactory = await hre.ethers.getContractFactory(
@@ -13,19 +25,26 @@ const main = async () => {
     owner.address
   );
 
-  await contract.getTotalMemes();
+  await contract.getPosts();
 
-  let txn = await contract.uploadMeme("Meme");
+  const post = {
+    imgUrl: "https://i.ytimg.com/vi/qs95bL3voo0/hqdefault.jpg",
+    title: "Milky Chávez",
+    description: "Chávez with a bag of milk on his head",
+  };
+
+  let txn = await contract.publishPost(post);
   await txn.wait();
 
   console.log("Calling contract from random person");
   const txdFromRandomPerson = await contract
     .connect(randomPerson)
-    .uploadMeme("meme");
+    .publishPost(post);
   await txdFromRandomPerson.wait();
 
-  const totalPosts = await contract.getTotalMemes();
-  console.log("total posts", totalPosts)
+  const totalPosts = await contract.getPosts();
+  const cleanedPosts = mapPosts(totalPosts);
+  console.log("total posts", cleanedPosts);
 };
 
 const runMain = async () => {
