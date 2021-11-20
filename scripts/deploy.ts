@@ -1,3 +1,5 @@
+import hre from 'hardhat'
+
 const main = async () => {
   const [deployer] = await hre.ethers.getSigners();
   const accountBalance = await deployer.getBalance();
@@ -28,4 +30,4 @@ const runMain = async () => {
   }
 };
 
-runMain();
+runMain().then(()=>console.log("Done!"));

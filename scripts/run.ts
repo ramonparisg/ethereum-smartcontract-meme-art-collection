@@ -1,9 +1,13 @@
-const hre = require("hardhat");
+import hre from "hardhat";
+import {
+  MemeArtCollectionPortal,
+  PostStructOutput,
+} from "../typechain-types/MemeArtCollectionPortal";
 
-function mapPosts(totalPosts) {
+function mapPosts(totalPosts: PostStructOutput[]) {
   return totalPosts?.map(({ meme, ...post }) => ({
     author: post.author,
-    timestamp: new Date(post.timestamp * 1000),
+    timestamp: new Date(post.timestamp?.toNumber() * 1000),
     meme: {
       imgUrl: meme.imgUrl,
       title: meme.title,
@@ -17,7 +21,9 @@ const main = async () => {
   const contractFactory = await hre.ethers.getContractFactory(
     "MemeArtCollectionPortal"
   );
-  const contract = await contractFactory.deploy();
+  const contract: MemeArtCollectionPortal = <MemeArtCollectionPortal>(
+    await contractFactory.deploy()
+  );
   await contract.deployed();
   console.log(
     "Fuck yeaaaaaah. Contract deployed to:%s by %s",
